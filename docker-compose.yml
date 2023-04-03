@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  core:
+    build:
+      context: ./dockerfiles
+      dockerfile: pnpm.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    container_name: core
+    volumes:
+      - .:/src
+    working_dir: /src
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    image: backend
+    environment:
+      APP_NAME: 'backend service in docker'
+    ports:
+      - 5001:5001
+    networks:
+      - backend-realworld-network
+
+networks:
+  backend-realworld-network:
