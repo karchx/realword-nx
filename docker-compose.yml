@@ -18,6 +18,7 @@ services:
       context: ./apps/backend
       dockerfile: Dockerfile
     image: backend
+    container_name: backend
     environment:
       APP_NAME: 'backend service in docker'
     ports:
@@ -33,11 +34,13 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
+    container_name: db
     volumes:
       - db:/var/lib/postgresql/data
 
   redis:
     image: redis:alpine
+    container_name: redis
     ports:
       - '6379:6379'
 
