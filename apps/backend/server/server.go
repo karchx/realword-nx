@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	log "github.com/gothew/l-og"
+	"github.com/karchx/realword-nx/postgres"
 )
 
 type Server struct {
@@ -14,7 +15,7 @@ type Server struct {
 	router *mux.Router
 }
 
-func NewServer() *Server {
+func NewServer(db *postgres.DB) *Server {
 	s := Server{
 		server: &http.Server{
 			WriteTimeout: 5 * time.Second,
