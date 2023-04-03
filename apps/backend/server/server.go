@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
@@ -33,7 +32,7 @@ func (s *Server) Run(port string) error {
 		port = ":" + port
 	}
 	s.server.Addr = port
-	log.Printf("Server starting on %s", port)
+	log.Info("Server starting on %s", port)
 	return s.server.ListenAndServe()
 }
 
@@ -47,21 +46,4 @@ func healtCheck() http.Handler {
 
 		writeJSON(w, http.StatusOK, resp)
 	})
-}
-
-func writeJSON(w http.ResponseWriter, code int, data interface{}) {
-	jsonBytes, err := json.Marshal(data)
-
-	if err != nil {
-		log.Error()
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	_, err = w.Write(jsonBytes)
-
-	if err != nil {
-		log.Erro(err)
-	}
 }
