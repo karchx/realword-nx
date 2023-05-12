@@ -33,7 +33,7 @@ func (s *Server) Run(port string) error {
 		port = ":" + port
 	}
 	s.server.Addr = port
-	log.Info("Server starting on %s", port)
+	log.Infof("Server starting on %s", port)
 	return s.server.ListenAndServe()
 }
 

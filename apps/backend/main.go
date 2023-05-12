@@ -1,9 +1,7 @@
 package main
 
 import (
-	"log"
-
-	logG "github.com/gothew/l-og"
+	log "github.com/gothew/l-og"
 	"github.com/karchx/realword-nx/postgres"
 	"github.com/karchx/realword-nx/server"
 )
@@ -16,10 +14,10 @@ type config struct {
 func main() {
 	cfg := envConfig()
 
-	db, err := postgres.Open(cfg.dbURI)
+	db, err := postgres.Open(&cfg.dbURI)
 
 	if err != nil {
-		logG.Fatalf("cannot open database: %v", err)
+		log.Fatalf("cannot open database: %v", err)
 	}
 
 	srv := server.NewServer(db)
@@ -27,21 +25,21 @@ func main() {
 }
 
 func envConfig() config {
-	/*port, ok := os.LookupEnv("PORT")
+	/*
+		port, _ := os.LookupEnv("PORT")
+			if !ok {
+				panic("PORT not provided")
+			}
 
-	if !ok {
-		panic("PORT not provided")
-	}
+			dbURI, ok := os.LookupEnv("POSTGRESQL_URL")
 
-	dbURI, ok := os.LookupEnv("POSTGRESQL_URL")
-
-	if !ok {
-		panic("POSTGRESQL_URL not provided")
-	}*/
+			if !ok {
+				panic("POSTGRESQL_URL not provided")
+			}*/
 
 	return config{port: "5001", dbURI: postgres.UrlDB{
-		Host:     "db",
-		Port:     "5423",
+		Host:     "127.0.0.1",
+		Port:     "5432",
 		User:     "postgres",
 		Password: "postgres",
 		Dbname:   "realword",
