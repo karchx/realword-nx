@@ -49,7 +49,7 @@ func (s *Server) createUser() http.HandlerFunc {
 		User struct {
 			Email    string `json:"email" validate:"required,email"`
 			Username string `json:"username" validate:"required,min=2"`
-			Password string `json:"email" validate:"required,min=8,max=72"`
+			Password string `json:"password" validate:"required,min=8,max=72"`
 		} `json:"user" validate:"required"`
 	}
 
@@ -61,10 +61,10 @@ func (s *Server) createUser() http.HandlerFunc {
 			return
 		}
 
-		/*if err := validate.Struct(input.User); err != nil {
+		if err := validate.Struct(input.User); err != nil {
 			validationError(w, err)
 			return
-		}*/
+		}
 
 		user := conduit.User{
 			Email:    input.User.Email,

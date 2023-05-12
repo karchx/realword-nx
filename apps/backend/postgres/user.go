@@ -36,7 +36,6 @@ func createUser(ctx context.Context, tx *sql.Tx, user *conduit.User) error {
 	INSERT INTO users (email, username, bio, image, password_hash)
 	VALUES($1, $2, $3, $4, $5) RETURNING id, created_at, updated_at
 	`
-
 	args := []interface{}{user.Email, user.Username, user.Bio, user.Image, user.PasswordHash}
 	err := tx.QueryRowContext(ctx, query, args...).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 

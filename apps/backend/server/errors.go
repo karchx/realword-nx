@@ -1,8 +1,8 @@
 package server
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	log "github.com/gothew/l-og"
@@ -29,6 +29,7 @@ func validationError(w http.ResponseWriter, _err error) {
 	default:
 		resp["non_field_error"] = append(resp["non_field_error"], err.Error())
 	}
+	log.Infof("ERROR: %v", _err)
 	errorResponse(w, http.StatusOK, resp)
 }
 
