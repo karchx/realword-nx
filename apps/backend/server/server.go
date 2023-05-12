@@ -25,6 +25,9 @@ func NewServer(db *postgres.DB) *Server {
 		router: mux.NewRouter().StrictSlash(true),
 	}
 
+	s.routes()
+
+	s.server.Handler = s.router
 	return &s
 }
 
