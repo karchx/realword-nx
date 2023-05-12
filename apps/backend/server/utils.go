@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 
 	log "github.com/gothew/l-og"
@@ -9,6 +10,10 @@ import (
 
 // M is a generic map
 type M map[string]interface{}
+
+func readJson[T any](body io.Reader, input T) error {
+	return json.NewDecoder(body).Decode(input)
+}
 
 func writeJSON(w http.ResponseWriter, code int, data interface{}) {
 	jsonBytes, err := json.Marshal(data)

@@ -7,12 +7,14 @@ import (
 
 	"github.com/gorilla/mux"
 	log "github.com/gothew/l-og"
+	"github.com/karchx/realword-nx/conduit"
 	"github.com/karchx/realword-nx/postgres"
 )
 
 type Server struct {
-	server *http.Server
-	router *mux.Router
+	server      *http.Server
+	router      *mux.Router
+	userService conduit.UserService
 }
 
 func NewServer(db *postgres.DB) *Server {
@@ -26,6 +28,7 @@ func NewServer(db *postgres.DB) *Server {
 	}
 
 	s.routes()
+	s.userService = postgres.NewUserService(db)
 
 	s.server.Handler = s.router
 	return &s

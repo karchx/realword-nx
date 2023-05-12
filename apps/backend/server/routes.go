@@ -26,5 +26,6 @@ func (s *Server) routes() {
 	notAuth := apiRouter.PathPrefix("").Subrouter()
 	{
 		notAuth.Handle("/health", healtCheck())
+		notAuth.Handle("/users", s.createUser()).Methods("POST")
 	}
 }
