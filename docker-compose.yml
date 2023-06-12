@@ -17,10 +17,14 @@ services:
     build:
       context: ./apps/backend
       dockerfile: Dockerfile
+    depends_on:
+        - db
     image: backend
     container_name: backend
     environment:
       APP_NAME: 'backend service in docker'
+    volumes:
+      - .:/app
     ports:
       - 5001:5001
     networks:
