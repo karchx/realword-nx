@@ -8,8 +8,8 @@ import (
 
 type User struct {
 	ID       int    `gorm:"primaryKey" json:"-"`
-	Email    string `json:"email,omitempty"`
-	Username string `json:"username,omitempty"`
+	Email    string `gorm:"uniqueIndex" json:"email,omitempty"`
+	Username string `gorm:"uniqueIndex" json:"username,omitempty"`
 	Bio      string `json:"bio,omitempty"`
 	Image    string `json:"image,omitempty"`
 	Token    string `json:"token,omitempty"`
