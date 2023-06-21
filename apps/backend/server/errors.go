@@ -68,3 +68,8 @@ func checkTagRules(e validator.FieldError) (errMsg string) {
 	}
 	return
 }
+
+func invalidUserCredentialsError(w http.ResponseWriter) {
+	msg := "invalid authentication credentials"
+	errorResponse(w, http.StatusUnauthorized, msg)
+}

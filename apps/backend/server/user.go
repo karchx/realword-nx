@@ -90,6 +90,41 @@ func (s *Server) createUser() http.HandlerFunc {
 	}
 }
 
+func (s *Server) loginUser() http.HandlerFunc {
+	type Input struct {
+		User struct {
+			Email    string `json:"email"`
+			Password string `json:"password"`
+		} `json:"user"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		input := Input{}
+
+		if err := readJson(r.Body, &input); err != nil {
+			errorResponse(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		user, err := s.userService.Authenticate(input.User.Email, input.User.Password)
+
+		if err != nil || user == nil {
+			invalidUserCredentialsError(w)
+			return
+		}
+
+		token, err := generateUserToken(user)
+
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+
+		user.Token = token
+		writeJSON(w, http.StatusOK, M{"user": user})
+	}
+}
+
 func (s *Server) getProfile() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusOK, M{"profile": "profile"})

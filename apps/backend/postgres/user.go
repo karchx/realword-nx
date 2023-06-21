@@ -12,8 +12,29 @@ func NewUserService(db *DB) *UserService {
 	return &UserService{db}
 }
 
+func (us *UserService) UserByEmail(email string) (*conduit.User, error) {
+	var user conduit.User
+	us.db.Where(&conduit.UserFilter{Email: &email}).First(&user)
+
+	return &user, nil
+}
+
 func (us *UserService) CreateUser(user conduit.User) error {
 	return createUser(user, us)
+}
+
+func (us *UserService) Authenticate(email, password string) (*conduit.User, error) {
+	user, err := us.UserByEmail(email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !user.VerifyPassword(password) {
+		return nil, conduit.ErrUnAuthorized
+	}
+
+	return user, nil
 }
 
 func createUser(user conduit.User, us *UserService) error {

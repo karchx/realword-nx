@@ -27,5 +27,6 @@ func (s *Server) routes() {
 	{
 		notAuth.Handle("/health", healtCheck())
 		notAuth.Handle("/users", s.createUser()).Methods("POST")
+		notAuth.Handle("/users/login", s.loginUser()).Methods("POST")
 	}
 }
