@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 	"github.com/karchx/realword-nx/conduit"
 )
 
@@ -127,6 +128,25 @@ func (s *Server) loginUser() http.HandlerFunc {
 
 func (s *Server) getProfile() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		writeJSON(w, http.StatusOK, M{"profile": "profile"})
+		vars := mux.Vars(r)
+		// ctx := r.Context()
+		user, err := s.userService.UserByUsername(vars["username"])
+
+		if err != nil {
+			switch {
+			case errors.Is(err, conduit.ErrNotFound):
+				err := ErrorM{"profile": []string{"user profile not found"}}
+				notFoundError(w, err)
+			default:
+				serverError(w, err)
+			}
+
+			return
+		}
+
+		// currentUser := userFromContext(ctx)
+		profile := user.Profile()
+
+		writeJSON(w, http.StatusOK, M{"profile": profile})
 	}
 }

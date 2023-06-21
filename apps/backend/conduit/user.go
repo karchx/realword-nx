@@ -29,6 +29,13 @@ type UserFilter struct {
 	Offset int
 }
 
+type Profile struct {
+	Username  string `json:"username"`
+	Bio       string `json:"bio"`
+	Image     string `json:"image"`
+	Following bool   `json:"following"`
+}
+
 func (user *User) SetPassword(password string) error {
 	hashBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
@@ -47,8 +54,17 @@ func (user *User) VerifyPassword(password string) bool {
 	return err == nil
 }
 
+func (user *User) Profile() *Profile {
+	return &Profile{
+		Username: user.Username,
+		Bio:      user.Bio,
+		Image:    user.Image,
+	}
+}
+
 type UserService interface {
 	Authenticate(email, password string) (*User, error)
 	CreateUser(User) error
 	UserByEmail(string) (*User, error)
+	UserByUsername(string) (*User, error)
 }

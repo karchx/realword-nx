@@ -73,3 +73,7 @@ func invalidUserCredentialsError(w http.ResponseWriter) {
 	msg := "invalid authentication credentials"
 	errorResponse(w, http.StatusUnauthorized, msg)
 }
+
+func notFoundError(w http.ResponseWriter, err ErrorM) {
+	errorResponse(w, http.StatusNotFound, err)
+}

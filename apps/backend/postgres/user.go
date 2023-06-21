@@ -19,6 +19,16 @@ func (us *UserService) UserByEmail(email string) (*conduit.User, error) {
 	return &user, nil
 }
 
+func (us *UserService) UserByUsername(username string) (*conduit.User, error) {
+	var user conduit.User
+
+	if err := us.db.Where(&conduit.UserFilter{Username: &username}).First(&user).Error; err != nil {
+		return nil, conduit.ErrNotFound
+	}
+
+	return &user, nil
+}
+
 func (us *UserService) CreateUser(user conduit.User) error {
 	return createUser(user, us)
 }

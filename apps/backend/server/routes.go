@@ -20,7 +20,7 @@ func (s *Server) routes() {
 
 	optionalAuth.Use(s.authenticate(OptionalAuth))
 	{
-		optionalAuth.Handle("/profiles", s.getProfile()).Methods("GET")
+		optionalAuth.Handle("/profiles/{username}", s.getProfile()).Methods("GET")
 	}
 
 	notAuth := apiRouter.PathPrefix("").Subrouter()
