@@ -8,4 +8,5 @@ var (
 	ErrNotFound          = errors.New("record not found")
 	ErrUnAuthorized      = errors.New("unauthorized")
 	ErrInternal          = errors.New("internal error")
+	ErrNotCreated        = errors.New("not created")
 )

@@ -1,21 +1,20 @@
 package conduit
 
 import (
-	"context"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID           uint      `json:"-"`
-	Email        string    `json:"email,omitempty"`
-	Username     string    `json:"username,omitempty"`
-	Bio          string    `json:"bio,omitempty"`
-	Image        string    `json:"image,omitempty"`
-	Token        string    `json:"token,omitempty"`
-	Following    []*User   `json: "-"`
-	Followers    []*User   `json: "-"`
+	ID       int    `gorm:"primaryKey" json:"-"`
+	Email    string `json:"email,omitempty"`
+	Username string `json:"username,omitempty"`
+	Bio      string `json:"bio,omitempty"`
+	Image    string `json:"image,omitempty"`
+	Token    string `json:"token,omitempty"`
+	//Following    []*User   `json: "-"`
+	//Followers    []*User   `json: "-"`
 	PasswordHash string    `json:"-" db:"password_has"`
 	CreatedAt    time.Time `json:"-" db:"created_at"`
 	UpdatedAt    time.Time `json:"-" db:"updated_at"`
@@ -34,5 +33,5 @@ func (user *User) SetPassword(password string) error {
 }
 
 type UserService interface {
-	CreateUser(context.Context, *User) error
+	CreateUser(User) error
 }

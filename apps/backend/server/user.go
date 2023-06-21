@@ -72,7 +72,7 @@ func (s *Server) createUser() http.HandlerFunc {
 		}
 		user.SetPassword(input.User.Password)
 
-		if err := s.userService.CreateUser(r.Context(), &user); err != nil {
+		if err := s.userService.CreateUser(user); err != nil {
 			switch {
 			case errors.Is(err, conduit.ErrDuplicateEmail):
 				err = ErrorM{"email": []string{"this email is already in use"}}

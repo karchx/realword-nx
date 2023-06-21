@@ -15,20 +15,13 @@ func NewUserService(db *DB) *UserService {
 	return &UserService{db}
 }
 
-func (us *UserService) CreateUser(ctx context.Context, user *conduit.User) error {
-	tx, err := us.db.BeginTx(ctx, nil)
-
-	if err != nil {
-		return err
+func (us *UserService) CreateUser(user conduit.User) error {
+	result := us.db.Create(&user)
+	if result.RowsAffected == 0 {
+		return conduit.ErrNotCreated
 	}
 
-	defer tx.Rollback()
-
-	if err := createUser(ctx, tx, user); err != nil {
-		return err
-	}
-
-	return tx.Commit()
+	return nil
 }
 
 func createUser(ctx context.Context, tx *sql.Tx, user *conduit.User) error {

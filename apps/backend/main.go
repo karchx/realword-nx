@@ -2,6 +2,7 @@ package main
 
 import (
 	log "github.com/gothew/l-og"
+	"github.com/karchx/realword-nx/conduit"
 	"github.com/karchx/realword-nx/postgres"
 	"github.com/karchx/realword-nx/server"
 )
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot open database: %v", err)
 	}
+	db.AutoMigrate(conduit.User{})
+	log.Info("Migrated")
 
 	srv := server.NewServer(db)
 	log.Fatal(srv.Run(cfg.port))

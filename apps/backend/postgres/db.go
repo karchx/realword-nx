@@ -1,15 +1,17 @@
 package postgres
 
 import (
-	"database/sql"
 	"fmt"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	log "github.com/gothew/l-og"
 	_ "github.com/lib/pq"
 )
 
 type DB struct {
-	*sql.DB
+	*gorm.DB
 }
 
 type UrlDB struct {
@@ -22,13 +24,9 @@ type UrlDB struct {
 
 func Open(url *UrlDB) (*DB, error) {
 	psqlUrl := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", url.Host, url.Port, url.User, url.Password, url.Dbname)
-	db, err := sql.Open("postgres", psqlUrl)
+	db, err := gorm.Open(postgres.Open(psqlUrl), &gorm.Config{})
 
 	if err != nil {
-		return nil, err
-	}
-
-	if err := db.Ping(); err != nil {
 		return nil, err
 	}
 
