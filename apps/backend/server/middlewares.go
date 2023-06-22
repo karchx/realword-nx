@@ -3,8 +3,10 @@ package server
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/handlers"
+	"github.com/karchx/realword-nx/conduit"
 )
 
 func Logger(w io.Writer) func(h http.Handler) http.Handler {
@@ -22,8 +24,41 @@ func (s *Server) authenticate(mustAuth bool) func(http.Handler) http.Handler {
 			if authHeader == "" {
 				if mustAuth {
 					invalidAuthTokenError(w)
+				} else {
+					r = setContextUser(r, &conduit.AnonymousUser)
+					h.ServeHTTP(w, r)
 				}
+
+				return
 			}
+
+			ss := strings.Split(authHeader, " ")
+
+			if len(ss) < 2 {
+				invalidAuthTokenError(w)
+				return
+			}
+
+			token := ss[1]
+
+			claims, err := parseUserToken(token)
+
+			if err != nil {
+				invalidAuthTokenError(w)
+				return
+			}
+
+			email := claims["email"].(string)
+
+			user, err := s.userService.UserByEmail(email)
+
+			if err != nil {
+				serverError(w, err)
+			}
+
+			r = setContextUser(r, user)
+			r = setContextUserToken(r, token)
+			h.ServeHTTP(w, r)
 		})
 	}
 }

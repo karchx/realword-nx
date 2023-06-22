@@ -6,6 +6,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var AnonymousUser User
+
 type User struct {
 	ID       int    `gorm:"primaryKey" json:"-"`
 	Email    string `gorm:"uniqueIndex" json:"email,omitempty"`
