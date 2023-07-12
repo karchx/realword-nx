@@ -87,7 +87,13 @@ func (s *Server) createUser() http.HandlerFunc {
 			return
 		}
 
-		writeJSON(w, http.StatusCreated, M{"user": user})
+		token, err := generateUserToken(&user)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+
+		writeJSON(w, http.StatusCreated, userResponse(&user, token))
 	}
 }
 
