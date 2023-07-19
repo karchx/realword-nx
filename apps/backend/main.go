@@ -41,7 +41,7 @@ func envConfig() config {
 			}*/
 
 	return config{port: "5001", dbURI: postgres.UrlDB{
-		Host:     "127.0.0.1",
+		Host:     "0.0.0.0",
 		Port:     "5432",
 		User:     "postgres",
 		Password: "postgres",
