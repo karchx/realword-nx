@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot open database: %v", err)
 	}
-	db.AutoMigrate(conduit.User{})
+	db.AutoMigrate(&conduit.User{})
 	log.Info("Migrated")
 
 	srv := server.NewServer(db)

@@ -3,24 +3,30 @@ package conduit
 import (
 	"time"
 
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 var AnonymousUser User
 
 type User struct {
-	ID       int    `gorm:"primaryKey" json:"-"`
-	Email    string `gorm:"uniqueIndex" json:"email,omitempty"`
-	Username string `gorm:"uniqueIndex" json:"username,omitempty"`
-	Bio      string `json:"bio,omitempty"`
-	Image    string `json:"image,omitempty"`
-	Token    string `json:"token,omitempty"`
+	ID       uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
+	Email    string    `gorm:"uniqueIndex" json:"email,omitempty"`
+	Username string    `gorm:"uniqueIndex" json:"username,omitempty"`
+	Bio      string    `json:"bio,omitempty"`
+	Image    string    `json:"image,omitempty"`
+	Token    string    `json:"token,omitempty"`
 	//Following    []*User   `json: "-"`
 	//Followers    []*User   `json: "-"`
 	PasswordHash string    `json:"-" db:"password_has"`
 	CreatedAt    time.Time `json:"-" db:"created_at"`
 	UpdatedAt    time.Time `json:"-" db:"updated_at"`
 }
+
+//type Following struct {
+//  ID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+//}
 
 type UserFilter struct {
 	ID       *int
@@ -62,6 +68,13 @@ func (user *User) Profile() *Profile {
 		Bio:      user.Bio,
 		Image:    user.Image,
 	}
+}
+
+func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
+  // UUID version 4
+  uuid := uuid.NewV4().String()
+  tx.Statement.SetColumn("ID", uuid)
+  return nil
 }
 
 type UserService interface {
