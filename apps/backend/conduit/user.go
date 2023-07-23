@@ -5,7 +5,6 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 var AnonymousUser User
@@ -68,13 +67,6 @@ func (user *User) Profile() *Profile {
 		Bio:      user.Bio,
 		Image:    user.Image,
 	}
-}
-
-func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
-  // UUID version 4
-  uuid := uuid.NewV4().String()
-  tx.Statement.SetColumn("ID", uuid)
-  return nil
 }
 
 type UserService interface {
