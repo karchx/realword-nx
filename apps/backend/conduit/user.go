@@ -10,22 +10,27 @@ import (
 var AnonymousUser User
 
 type User struct {
-	ID       uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
-	Email    string    `gorm:"uniqueIndex" json:"email,omitempty"`
-	Username string    `gorm:"uniqueIndex" json:"username,omitempty"`
-	Bio      string    `json:"bio,omitempty"`
-	Image    string    `json:"image,omitempty"`
-	Token    string    `json:"token,omitempty"`
-	//Following    []*User   `json: "-"`
-	//Followers    []*User   `json: "-"`
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
+	Email        string    `gorm:"uniqueIndex" json:"email,omitempty"`
+	Username     string    `gorm:"uniqueIndex" json:"username,omitempty"`
+	Bio          string    `json:"bio,omitempty"`
+	Image        string    `json:"image,omitempty"`
+	Token        string    `json:"token,omitempty"`
+	Following    []*User   `json:"-"`
+	Followers    []*User   `json:"-"`
 	PasswordHash string    `json:"-" db:"password_has"`
 	CreatedAt    time.Time `json:"-" db:"created_at"`
 	UpdatedAt    time.Time `json:"-" db:"updated_at"`
 }
 
-//type Following struct {
-//  ID uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
-//}
+//gorm:"foreignKey:LocationID;references:ID"
+type Following struct {
+	ID          uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
+  FollowingID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();foreignKey:Following;references:ID" db:"following_id"`
+	Following   *User     `json:"following"`
+  FollowerID  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();foreignKey:Follower;references:ID" db:"follower_id"`
+	Follower    *User     `json:"follower"`
+}
 
 type UserFilter struct {
 	ID       *int
