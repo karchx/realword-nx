@@ -16,20 +16,17 @@ type User struct {
 	Bio          string    `json:"bio,omitempty"`
 	Image        string    `json:"image,omitempty"`
 	Token        string    `json:"token,omitempty"`
-	Following    []*User   `json:"-"`
-	Followers    []*User   `json:"-"`
 	PasswordHash string    `json:"-" db:"password_has"`
 	CreatedAt    time.Time `json:"-" db:"created_at"`
 	UpdatedAt    time.Time `json:"-" db:"updated_at"`
 }
 
-//gorm:"foreignKey:LocationID;references:ID"
 type Following struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
-  FollowingID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();foreignKey:Following;references:ID" db:"following_id"`
-	Following   *User     `json:"following"`
-  FollowerID  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();foreignKey:Follower;references:ID" db:"follower_id"`
-	Follower    *User     `json:"follower"`
+	FollowingID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"followingId" db:"following_id"`
+	Following   *User     `gorm:"foreignKey:FollowingID" json:"following"`
+	FollowerID  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"followerId" db:"follower_id"`
+	Follower    *User     `gorm:"foreignKey:FollowerID" json:"follower"`
 }
 
 type UserFilter struct {
