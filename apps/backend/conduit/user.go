@@ -9,7 +9,6 @@ import (
 
 var AnonymousUser User
 
-
 type User struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
 	Email        string    `gorm:"uniqueIndex" json:"email,omitempty"`
@@ -72,25 +71,10 @@ func (user *User) Profile() *Profile {
 	}
 }
 
-func (user *User) ProfileWithFollow(u *User) *Profile {
-	return &Profile{
-		Username: u.Username,
-		Bio: u.Bio,
-		Image: u.Image,
-		Following: u.IsFollowing(u),
-	}
-}
-
-func (me *User) IsFollowing(user *User) bool {
-  var following Following
-  //db.Where(&UserFilter{Username: &user.Username}).First(&following)
-
-  return me.Username == following.Following.Username
-}
-
 type UserService interface {
 	Authenticate(email, password string) (*User, error)
 	CreateUser(User) error
 	UserByEmail(string) (*User, error)
 	UserByUsername(string) (*User, error)
+	ProfileWithFollow(*User, *User) *Profile
 }
