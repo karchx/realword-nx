@@ -24,5 +24,5 @@ func (m *UserService) UserByEmail(email string) (*conduit.User, error) {
 }
 
 func (m *UserService) UserByUsername(username string) (*conduit.User, error) {
-  return m.UserByUsernameFn(username)
+	return m.UserByUsernameFn(username)
 }
