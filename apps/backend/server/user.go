@@ -135,7 +135,7 @@ func (s *Server) loginUser() http.HandlerFunc {
 func (s *Server) getProfile() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		// ctx := r.Context()
+		ctx := r.Context()
 		user, err := s.userService.UserByUsername(vars["username"])
 
 		if err != nil {
@@ -150,9 +150,9 @@ func (s *Server) getProfile() http.HandlerFunc {
 			return
 		}
 
-		// currentUser := userFromContext(ctx)
+		currentUser := userFromContext(ctx)
 		profile := user.Profile()
 
-		writeJSON(w, http.StatusOK, M{"profile": profile})
+    writeJSON(w, http.StatusOK, M{"profile": profile, "current": currentUser})
 	}
 }
