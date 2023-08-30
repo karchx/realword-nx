@@ -29,8 +29,12 @@ type Following struct {
 	Follower    *User     `gorm:"foreignKey:FollowerID" json:"follower"`
 }
 
+type FollowFilter struct {
+	FollowerID *uuid.UUID
+}
+
 type UserFilter struct {
-	ID       *int
+	ID       *uuid.UUID
 	Email    *string
 	Username *string
 
