@@ -23,9 +23,9 @@ type User struct {
 
 type Following struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
-	FollowingID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"followingId" db:"following_id"`
+	FollowingID uuid.UUID `gorm:"type:uuid;" json:"followingId" db:"following_id"`
 	Following   *User     `gorm:"foreignKey:FollowingID" json:"following"`
-	FollowerID  uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"followerId" db:"follower_id"`
+	FollowerID  uuid.UUID `gorm:"type:uuid;" json:"followerId" db:"follower_id"`
 	Follower    *User     `gorm:"foreignKey:FollowerID" json:"follower"`
 }
 
