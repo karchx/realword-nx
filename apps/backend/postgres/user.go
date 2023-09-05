@@ -47,22 +47,6 @@ func (us *UserService) Authenticate(email, password string) (*conduit.User, erro
 	return user, nil
 }
 
-func (us *UserService) ProfileWithFollow(me, u *conduit.User) *conduit.Profile {
-	return &conduit.Profile{
-		Username:  u.Username,
-		Bio:       u.Bio,
-		Image:     u.Image,
-		Following: us.IsFollowing(me, u),
-	}
-}
-
-func (us *UserService) IsFollowing(me, user *conduit.User) bool {
-	var following conduit.Following
-	us.db.Where(&conduit.UserFilter{Username: &user.Username}).First(&following)
-
-	return me.Username == following.Following.Username
-}
-
 func createUser(user conduit.User, us *UserService) error {
 
 	result := us.db.Create(&user)

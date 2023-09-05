@@ -17,20 +17,19 @@ type User struct {
 	Image        string    `json:"image,omitempty"`
 	Token        string    `json:"token,omitempty"`
 	PasswordHash string    `json:"-" db:"password_has"`
+	Followers    []Follow  `gorm:"foreignKey:FollowingID"`
+	Followings   []Follow  `gorm:"foreignKey:FollowerID"`
 	CreatedAt    time.Time `json:"-" db:"created_at"`
 	UpdatedAt    time.Time `json:"-" db:"updated_at"`
 }
 
-type Following struct {
-	ID          uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
-	FollowingID uuid.UUID `gorm:"type:uuid;" json:"followingId" db:"following_id"`
-	Following   *User     `gorm:"foreignKey:FollowingID" json:"following"`
+type Follow struct {
+	Following   User
+	FollowingID uuid.UUID `gorm:"type:uuid;primaryKey" json:"followingId" db:"following_id"`
+	Follower    User
 	FollowerID  uuid.UUID `gorm:"type:uuid;" json:"followerId" db:"follower_id"`
-	Follower    *User     `gorm:"foreignKey:FollowerID" json:"follower"`
-}
-
-type FollowFilter struct {
-	FollowerID *uuid.UUID
+	CreatedAt   time.Time `json:"-" db:"created_at"`
+	UpdatedAt   time.Time `json:"-" db:"updated_at"`
 }
 
 type UserFilter struct {
@@ -80,5 +79,4 @@ type UserService interface {
 	CreateUser(User) error
 	UserByEmail(string) (*User, error)
 	UserByUsername(string) (*User, error)
-	ProfileWithFollow(*User, *User) *Profile
 }

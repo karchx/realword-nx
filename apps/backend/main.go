@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("cannot open database: %v", err)
 	}
-	db.AutoMigrate(&conduit.User{}, &conduit.Following{})
+	db.AutoMigrate(&conduit.User{}, &conduit.Follow{})
 	log.Info("Migrated")
 
 	srv := server.NewServer(db)
@@ -45,6 +45,6 @@ func envConfig() config {
 		Port:     "5432",
 		User:     "postgres",
 		Password: "postgres",
-		Dbname:   "realword",
+		Dbname:   "realworld",
 	}}
 }
