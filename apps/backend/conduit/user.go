@@ -74,6 +74,28 @@ func (user *User) Profile() *Profile {
 	}
 }
 
+func (user *User) ProfileWithFollow(u *User) *Profile {
+	return &Profile{
+		Username:  user.Username,
+		Bio:       user.Bio,
+		Image:     user.Image,
+		Following: user.IsFollowing(u.ID),
+	}
+}
+
+func (me *User) IsFollowing(id uuid.UUID) bool {
+	if me.Followers == nil {
+		return false
+	}
+
+	for _, f := range me.Followers {
+		if f.FollowerID == id {
+			return true
+		}
+	}
+	return false
+}
+
 type UserService interface {
 	Authenticate(email, password string) (*User, error)
 	CreateUser(User) error
