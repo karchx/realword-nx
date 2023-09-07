@@ -14,7 +14,9 @@ func NewUserService(db *DB) *UserService {
 
 func (us *UserService) UserByEmail(email string) (*conduit.User, error) {
 	var user conduit.User
-	us.db.Where(&conduit.UserFilter{Email: &email}).First(&user)
+  if err := us.db.Where(&conduit.User{Email: email}).First(&user).Error; err != nil {
+    return nil, conduit.ErrNotFound
+  }
 
 	return &user, nil
 }
@@ -22,7 +24,7 @@ func (us *UserService) UserByEmail(email string) (*conduit.User, error) {
 func (us *UserService) UserByUsername(username string) (*conduit.User, error) {
 	var user conduit.User
 
-	if err := us.db.Where(&conduit.UserFilter{Username: &username}).First(&user).Error; err != nil {
+	if err := us.db.Where(&conduit.User{Username: username}).First(&user).Error; err != nil {
 		return nil, conduit.ErrNotFound
 	}
 

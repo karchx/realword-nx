@@ -153,6 +153,6 @@ func (s *Server) getProfile() http.HandlerFunc {
 		currentUser := userFromContext(ctx)
 		profile := user.ProfileWithFollow(currentUser)
 
-		writeJSON(w, http.StatusOK, M{"profile": profile, "current": currentUser})
+		writeJSON(w, http.StatusOK, M{"profile": profile})
 	}
 }

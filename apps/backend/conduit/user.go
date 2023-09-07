@@ -32,15 +32,6 @@ type Follow struct {
 	UpdatedAt   time.Time `json:"-" db:"updated_at"`
 }
 
-type UserFilter struct {
-	ID       *uuid.UUID
-	Email    *string
-	Username *string
-
-	Limit  int
-	Offset int
-}
-
 type Profile struct {
 	Username  string `json:"username"`
 	Bio       string `json:"bio"`
