@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"github.com/karchx/realword-nx/conduit"
+	uuid "github.com/satori/go.uuid"
 )
 
 type UserService struct {
@@ -14,9 +15,9 @@ func NewUserService(db *DB) *UserService {
 
 func (us *UserService) UserByEmail(email string) (*conduit.User, error) {
 	var user conduit.User
-  if err := us.db.Where(&conduit.User{Email: email}).First(&user).Error; err != nil {
-    return nil, conduit.ErrNotFound
-  }
+	if err := us.db.Where(&conduit.User{Email: email}).First(&user).Error; err != nil {
+		return nil, conduit.ErrNotFound
+	}
 
 	return &user, nil
 }
@@ -47,6 +48,10 @@ func (us *UserService) Authenticate(email, password string) (*conduit.User, erro
 	}
 
 	return user, nil
+}
+
+func (us *UserService) AddFollower(user *conduit.User, followerID uuid.UUID) error {
+	return us.db.Model(user).Association("Followers").Append(&conduit.Follow{FollowerID: followerID, FollowingID: user.ID})
 }
 
 func createUser(user conduit.User, us *UserService) error {
