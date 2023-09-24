@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -152,6 +153,50 @@ func (s *Server) getProfile() http.HandlerFunc {
 
 		currentUser := userFromContext(ctx)
 		profile := user.ProfileWithFollow(currentUser)
+
+		writeJSON(w, http.StatusOK, M{"profile": profile})
+	}
+}
+
+func (s *Server) followAction(action string) http.HandlerFunc {
+	const (
+		Follow   = "follow"
+		UnFollow = "unfollow"
+	)
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		ctx := r.Context()
+		currentUser := userFromContext(ctx)
+		username := vars["username"]
+		user, err := s.userService.UserByUsername(username)
+
+		if user.ID == currentUser.ID {
+			err := ErrorM{"profile": []string{fmt.Sprintf("cannot %s self", action)}}
+			errorResponse(w, http.StatusForbidden, err)
+			return
+		}
+
+		if err != nil {
+			err := ErrorM{"profile": []string{"user profile not found"}}
+			notFoundError(w, err)
+			return
+		}
+
+		var following bool
+		switch action {
+		case Follow:
+			err = s.userService.AddFollower(user, currentUser.ID)
+			following = true
+		}
+
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+
+		profile := user.Profile()
+		profile.Following = following
 
 		writeJSON(w, http.StatusOK, M{"profile": profile})
 	}

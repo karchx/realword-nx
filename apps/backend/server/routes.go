@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	MustAuth     = true
 	versionApi   = "v1"
 	OptionalAuth = false
 )
@@ -28,5 +29,11 @@ func (s *Server) routes() {
 		notAuth.Handle("/health", healtCheck())
 		notAuth.Handle("/users", s.createUser()).Methods("POST")
 		notAuth.Handle("/users/login", s.loginUser()).Methods("POST")
+	}
+
+	authApiRoutes := apiRouter.PathPrefix("").Subrouter()
+	authApiRoutes.Use(s.authenticate(MustAuth))
+	{
+		authApiRoutes.Handle("/profiles/{username}/follow", s.followAction("follow")).Methods("POST")
 	}
 }
