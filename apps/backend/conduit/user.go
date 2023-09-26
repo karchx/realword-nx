@@ -93,4 +93,5 @@ type UserService interface {
 	UserByEmail(string) (*User, error)
 	UserByUsername(string) (*User, error)
 	AddFollower(*User, uuid.UUID) error
+	RemoveFollower(*User, uuid.UUID) error
 }

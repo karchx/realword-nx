@@ -54,6 +54,23 @@ func (us *UserService) AddFollower(user *conduit.User, followerID uuid.UUID) err
 	return us.db.Model(user).Association("Followers").Append(&conduit.Follow{FollowerID: followerID, FollowingID: user.ID})
 }
 
+func (us *UserService) RemoveFollower(user *conduit.User, followerID uuid.UUID) error {
+	f := conduit.Follow{
+		FollowerID:  followerID,
+		FollowingID: user.ID,
+	}
+
+	if err := us.db.Model(user).Association("Followers").Find(&f); err != nil {
+		return err
+	}
+
+	if err := us.db.Delete(f).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func createUser(user conduit.User, us *UserService) error {
 
 	result := us.db.Create(&user)

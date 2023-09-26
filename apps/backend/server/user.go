@@ -188,6 +188,9 @@ func (s *Server) followAction(action string) http.HandlerFunc {
 		case Follow:
 			err = s.userService.AddFollower(user, currentUser.ID)
 			following = true
+		case UnFollow:
+			err = s.userService.RemoveFollower(user, currentUser.ID)
+			following = false
 		}
 
 		if err != nil {
