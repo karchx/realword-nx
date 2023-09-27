@@ -35,5 +35,6 @@ func (s *Server) routes() {
 	authApiRoutes.Use(s.authenticate(MustAuth))
 	{
 		authApiRoutes.Handle("/profiles/{username}/follow", s.followAction("follow")).Methods("POST")
+		authApiRoutes.Handle("/profiles/{username}/unfollow", s.followAction("unfollow")).Methods("DELETE")
 	}
 }
