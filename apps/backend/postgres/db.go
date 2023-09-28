@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	log "github.com/gothew/l-og"
 	_ "github.com/lib/pq"
@@ -24,7 +25,9 @@ type UrlDB struct {
 
 func Open(url *UrlDB) (*DB, error) {
 	psqlUrl := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", url.Host, url.Port, url.User, url.Password, url.Dbname)
-	db, err := gorm.Open(postgres.Open(psqlUrl), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(psqlUrl), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
 		return nil, err
