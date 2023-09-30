@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/karchx/realword-nx/db"
 
 	log "github.com/gothew/l-og"
 )
@@ -11,6 +12,16 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello")
 	})
+
+	d := db.New(&db.OptionsConnection{
+		Host:     "0.0.0.0",
+		Port:     "5432",
+		User:     "postgres",
+		Password: "postgres",
+		Dbname:   "realworld",
+	})
+
+	db.AutoMigrate(d)
 
 	log.Fatal(app.Listen(":3000"))
 }

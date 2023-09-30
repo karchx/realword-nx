@@ -76,17 +76,17 @@ func (user *User) ProfileWithFollow(u *User) *Profile {
 }
 
 func (me *User) IsFollowing(user *User) bool {
-  log.Info(user)
-  if user.Followers == nil {
-    return false
-  }
+	log.Info(user)
+	if user.Followers == nil {
+		return false
+	}
 
-  for _, u := range user.Followers {
-    if me.Username == u.Follower.Username {
-      return true
-    }
-  }
-  return false
+	for _, u := range user.Followers {
+		if me.Username == u.Follower.Username {
+			return true
+		}
+	}
+	return false
 }
 
 /*func (me *User) IsFollowing(id uuid.UUID) bool {
