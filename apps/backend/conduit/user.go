@@ -3,6 +3,7 @@ package conduit
 import (
 	"time"
 
+	log "github.com/gothew/l-og"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -70,11 +71,25 @@ func (user *User) ProfileWithFollow(u *User) *Profile {
 		Username:  user.Username,
 		Bio:       user.Bio,
 		Image:     user.Image,
-		Following: user.IsFollowing(u.ID),
+		Following: u.IsFollowing(user),
 	}
 }
 
-func (me *User) IsFollowing(id uuid.UUID) bool {
+func (me *User) IsFollowing(user *User) bool {
+  log.Info(user)
+  if user.Followers == nil {
+    return false
+  }
+
+  for _, u := range user.Followers {
+    if me.Username == u.Follower.Username {
+      return true
+    }
+  }
+  return false
+}
+
+/*func (me *User) IsFollowing(id uuid.UUID) bool {
 	if me.Followers == nil {
 		return false
 	}
@@ -85,7 +100,7 @@ func (me *User) IsFollowing(id uuid.UUID) bool {
 		}
 	}
 	return false
-}
+}*/
 
 type UserService interface {
 	Authenticate(email, password string) (*User, error)
