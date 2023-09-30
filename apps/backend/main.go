@@ -1,17 +1,16 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"github.com/karchx/realword-nx/db"
+	"github.com/karchx/realword-nx/handler"
+	"github.com/karchx/realword-nx/router"
+	"github.com/karchx/realword-nx/store"
 
 	log "github.com/gothew/l-og"
 )
 
 func main() {
-	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello")
-	})
+	r := router.New()
 
 	d := db.New(&db.OptionsConnection{
 		Host:     "0.0.0.0",
@@ -22,8 +21,15 @@ func main() {
 	})
 
 	db.AutoMigrate(d)
+	us := store.NewUserStore(d)
 
-	log.Fatal(app.Listen(":3000"))
+	h := handler.NewHandler(us)
+	h.Register(r)
+
+	err := r.Listen(":3000")
+	if err != nil {
+		log.Errorf("%v", err)
+	}
 }
 
 /*type config struct {
