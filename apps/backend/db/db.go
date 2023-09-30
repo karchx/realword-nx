@@ -7,6 +7,7 @@ import (
 	"time"
 
 	lo "github.com/gothew/l-og"
+	"github.com/karchx/realword-nx/model"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -47,5 +48,7 @@ func New(url *OptionsConnection) *gorm.DB {
 }
 
 func AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate()
+	db.AutoMigrate(
+		&model.User{},
+	)
 }
