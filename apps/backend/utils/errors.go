@@ -1,5 +1,16 @@
 package utils
 
+import "errors"
+
+var (
+	ErrDuplicateEmail    = errors.New("duplicate email")
+	ErrDuplicateUsername = errors.New("duplicate username")
+	ErrNotFound          = errors.New("record not found")
+	ErrUnAuthorized      = errors.New("unauthorized")
+	ErrInternal          = errors.New("internal error")
+	ErrNotCreated        = errors.New("not created")
+)
+
 type Error struct {
 	Errors map[string]interface{} `json:"errors"`
 }
