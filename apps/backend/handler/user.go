@@ -31,6 +31,12 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
 	}
+	if u == nil {
+		return c.Status(http.StatusForbidden).JSON(utils.AccessForbidden())
+	}
+	if !u.CheckPassword(req.User.Password) {
+		return c.Status(http.StatusForbidden).JSON(utils.AccessForbidden())
+	}
 
 	return c.Status(http.StatusOK).JSON(newUserResponse(u))
 }
