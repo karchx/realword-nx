@@ -1,6 +1,9 @@
 package handler
 
-import "github.com/karchx/realword-nx/model"
+import (
+	"github.com/karchx/realword-nx/model"
+	"github.com/karchx/realword-nx/utils"
+)
 
 type userResponse struct {
 	User struct {
@@ -8,7 +11,7 @@ type userResponse struct {
 		Email    string  `json:"email"`
 		Bio      *string `json:"bio"`
 		Image    *string `json:"image"`
-		//Token string `json:"token"`
+		Token    string  `json:"token"`
 	} `json:"user"`
 }
 
@@ -18,6 +21,6 @@ func newUserResponse(u *model.User) *userResponse {
 	r.User.Email = u.Email
 	r.User.Bio = u.Bio
 	r.User.Image = u.Image
-	//r.User.Token = utils.GenerateJWT(u.ID)
+	r.User.Token = utils.GenerateJWT(u.ID)
 	return r
 }
