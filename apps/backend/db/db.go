@@ -42,8 +42,9 @@ func New(url *OptionsConnection) *gorm.DB {
 
 	if err != nil {
 		lo.Errorf("storage err: %v", err)
-	}
-	lo.Infof("DB: %s UP", url.Dbname)
+	} else {
+	  lo.Infof("DB: %s UP", url.Dbname)
+  }
 	return db
 }
 
