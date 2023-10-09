@@ -32,3 +32,10 @@ func AccessForbidden() Error {
 	e.Errors["body"] = "access forbidden"
 	return e
 }
+
+func NotFound() Error {
+	e := Error{}
+	e.Errors = make(map[string]interface{})
+	e.Errors["body"] = ErrNotFound
+	return e
+}

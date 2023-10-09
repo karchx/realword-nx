@@ -4,8 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/karchx/realword-nx/model"
 	"github.com/karchx/realword-nx/utils"
+	uuid "github.com/satori/go.uuid"
 )
 
 func (h *Handler) SignUp(c *fiber.Ctx) error {
@@ -39,4 +41,27 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 	}
 
 	return c.Status(http.StatusOK).JSON(newUserResponse(u))
+}
+
+func (h *Handler) CurrentUser(c *fiber.Ctx) error {
+	u, err := h.userStore.GetByID(userIDFromToken(c))
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if u == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+	return c.Status(http.StatusOK).JSON(newUserResponse(u))
+}
+
+func userIDFromToken(c *fiber.Ctx) uuid.UUID {
+	var user *jwt.Token
+	l := c.Locals("user")
+	if l == nil {
+		return uuid.UUID{}
+	}
+
+	user = l.(*jwt.Token)
+	id := (user.Claims.(jwt.MapClaims)["id"]).(uuid.UUID)
+	return id
 }
