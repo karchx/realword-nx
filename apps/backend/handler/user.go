@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -62,6 +63,7 @@ func userIDFromToken(c *fiber.Ctx) uuid.UUID {
 	}
 
 	user = l.(*jwt.Token)
-	id := (user.Claims.(jwt.MapClaims)["id"]).(uuid.UUID)
-	return id
+	id := fmt.Sprint(user.Claims.(jwt.MapClaims)["id"])
+	uuidUser, _ := uuid.FromString(id)
+	return uuidUser
 }
