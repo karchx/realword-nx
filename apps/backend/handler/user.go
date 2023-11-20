@@ -55,6 +55,25 @@ func (h *Handler) CurrentUser(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(newUserResponse(u))
 }
 
+func (h *Handler) UpdateUser(c *fiber.Ctx) error {
+	u, err := h.userStore.GetByID(userIDFromToken(c))
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if u == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+	req := newUserUpdateRequest()
+	req.populate(u)
+	if err := req.bind(c, u, h.validator); err != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+	}
+	if err := h.userStore.Update(u); err != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+	}
+	return c.Status(http.StatusOK).JSON(newUserResponse(u))
+}
+
 func userIDFromToken(c *fiber.Ctx) uuid.UUID {
 	var user *jwt.Token
 	l := c.Locals("user")

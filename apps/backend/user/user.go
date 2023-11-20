@@ -9,4 +9,5 @@ type Store interface {
 	GetByID(uuid.UUID) (*model.User, error)
 	GetByEmail(string) (*model.User, error)
 	Create(*model.User) error
+	Update(*model.User) error
 }

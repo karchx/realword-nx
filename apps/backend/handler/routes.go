@@ -19,4 +19,5 @@ func (h *Handler) Register(r *fiber.App) {
 	guestUsers.Post("/login", h.Login)
 	user := v1.Group("/user", jwtMiddleware)
 	user.Get("", h.CurrentUser)
+	user.Put("", h.UpdateUser)
 }

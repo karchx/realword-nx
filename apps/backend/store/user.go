@@ -44,3 +44,7 @@ func (us *UserStore) GetByEmail(e string) (*model.User, error) {
 func (us *UserStore) Create(u *model.User) error {
 	return us.db.Create(u).Error
 }
+
+func (us *UserStore) Update(u *model.User) error {
+	return us.db.Model(u).Updates(u).Error
+}
