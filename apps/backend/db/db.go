@@ -51,5 +51,6 @@ func New(url *OptionsConnection) *gorm.DB {
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		&model.User{},
+		&model.Follow{},
 	)
 }
