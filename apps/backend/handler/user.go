@@ -74,6 +74,18 @@ func (h *Handler) UpdateUser(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(newUserResponse(u))
 }
 
+func (h *Handler) GetProfile(c *fiber.Ctx) error {
+	username := c.Params("username")
+	u, err := h.userStore.GetByUsername(username)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if u == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+	return c.Status(http.StatusOK).JSON(newProfileResponse(h.userStore, userIDFromToken(c), u))
+}
+
 func userIDFromToken(c *fiber.Ctx) uuid.UUID {
 	var user *jwt.Token
 	l := c.Locals("user")

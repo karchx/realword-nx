@@ -20,4 +20,7 @@ func (h *Handler) Register(r *fiber.App) {
 	user := v1.Group("/user", jwtMiddleware)
 	user.Get("", h.CurrentUser)
 	user.Put("", h.UpdateUser)
+
+	profiles := v1.Group("/profiles", jwtMiddleware)
+	profiles.Get("/:username", h.GetProfile)
 }
