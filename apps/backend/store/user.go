@@ -60,6 +60,10 @@ func (us *UserStore) Update(u *model.User) error {
 	return us.db.Model(u).Updates(u).Error
 }
 
+func (us *UserStore) AddFollower(u *model.User, followerID uuid.UUID) error {
+	return us.db.Model(u).Association("Followers").Append(&model.Follow{FollowerID: followerID, FollowingID: u.ID})
+}
+
 func (us *UserStore) IsFollower(userID, followerID uuid.UUID) (bool, error) {
 	var f model.Follow
 	if err := us.db.Where("following_id = ? AND follower_id = ?", userID, followerID).First(&f).Error; err != nil {
