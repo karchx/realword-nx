@@ -102,6 +102,22 @@ func (h *Handler) Follow(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(newProfileResponse(h.userStore, userIDFromToken(c), u))
 }
 
+func (h *Handler) UnFollow(c *fiber.Ctx) error {
+	followerID := userIDFromToken(c)
+	username := c.Params("username")
+	u, err := h.userStore.GetByUsername(username)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if u == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+	if err := h.userStore.RemoveFollower(u, followerID); err != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+	}
+	return c.Status(http.StatusOK).JSON(newProfileResponse(h.userStore, userIDFromToken(c), u))
+}
+
 func userIDFromToken(c *fiber.Ctx) uuid.UUID {
 	var user *jwt.Token
 	l := c.Locals("user")
