@@ -22,8 +22,9 @@ func main() {
 
 	db.AutoMigrate(d)
 	us := store.NewUserStore(d)
+	as := store.NewArticleStore(d)
 
-	h := handler.NewHandler(us)
+	h := handler.NewHandler(us, as)
 	h.Register(r)
 
 	err := r.Listen(":3000")

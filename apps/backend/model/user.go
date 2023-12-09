@@ -42,3 +42,16 @@ func (u *User) CheckPassword(plain string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plain))
 	return err == nil
 }
+
+func (u *User) FollowedBy(id uuid.UUID) bool {
+	if u.Followers == nil {
+		return false
+	}
+
+	for _, f := range u.Followers {
+		if f.FollowerID == id {
+			return true
+		}
+	}
+	return true
+}

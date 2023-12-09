@@ -25,4 +25,7 @@ func (h *Handler) Register(r *fiber.App) {
 	profiles.Get("/:username", h.GetProfile)
 	profiles.Post("/:username/follow", h.Follow)
 	profiles.Delete("/:username/unfollow", h.UnFollow)
+
+	articles := v1.Group("/articles", jwtMiddleware)
+	articles.Post("", h.CreateArticle)
 }
