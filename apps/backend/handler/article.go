@@ -8,6 +8,18 @@ import (
 	"github.com/karchx/realword-nx/utils"
 )
 
+func (h *Handler) GetArticle(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	a, err := h.articleStore.GetBySlug(slug)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if a == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NewError(err))
+	}
+	return c.Status(http.StatusOK).JSON(newArticleResponse(userIDFromToken(c), a))
+}
+
 func (h *Handler) CreateArticle(c *fiber.Ctx) error {
 	var a model.Article
 	req := &articleCreateRequest{}

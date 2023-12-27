@@ -15,6 +15,14 @@ func NewArticleStore(db *gorm.DB) *ArticleStore {
 	}
 }
 
+func (as *ArticleStore) GetBySlug(s string) (*model.Article, error) {
+	var m model.Article
+
+	err := as.db.Where(&model.Article{Slug: s}).Preload("Author").First(&m).Error
+
+	return &m, err
+}
+
 func (as *ArticleStore) CreateArticle(a *model.Article) error {
 	tx := as.db.Begin()
 	if err := tx.Create(&a).Error; err != nil {

@@ -28,4 +28,5 @@ func (h *Handler) Register(r *fiber.App) {
 
 	articles := v1.Group("/articles", jwtMiddleware)
 	articles.Post("", h.CreateArticle)
+	articles.Get("/:slug", h.GetArticle)
 }
