@@ -120,3 +120,31 @@ func (r *articleCreateRequest) bind(c *fiber.Ctx, a *model.Article, v *Validator
 	a.Body = r.Article.Body
 	return nil
 }
+
+type articleUpdateRequest struct {
+	Article struct {
+		Title       string `json:"title" validate:"required"`
+		Description string `json:"description" validate:"required"`
+		Body        string `json:"body" validate:"required"`
+	} `json:"article"`
+}
+
+func (r *articleUpdateRequest) bind(c *fiber.Ctx, a *model.Article, v *Validator) error {
+	if err := c.BodyParser(r); err != nil {
+		return err
+	}
+	if err := v.Validate(r); err != nil {
+		return err
+	}
+	a.Title = r.Article.Title
+	a.Slug = slug.Make(a.Title)
+	a.Description = r.Article.Description
+	a.Body = r.Article.Body
+	return nil
+}
+
+func (r *articleUpdateRequest) populate(a *model.Article) {
+	r.Article.Title = a.Title
+	r.Article.Description = a.Description
+	r.Article.Body = a.Body
+}
