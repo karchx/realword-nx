@@ -57,3 +57,11 @@ func (as *ArticleStore) UpdateArticle(a *model.Article) error {
 	}
 	return tx.Commit().Error
 }
+
+func (as *ArticleStore) DeleteArticle(a *model.Article) error {
+	return as.db.Delete(a).Error
+}
+
+func (as *ArticleStore) UndoDeleteArticle(slug string) error {
+	return as.db.Model(&model.Article{}).Unscoped().Where(&model.Article{Slug: slug}).Update("deleted_at", nil).Error
+}

@@ -57,3 +57,34 @@ func (h *Handler) UpdateArticle(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusOK).JSON(newArticleResponse(userIDFromToken(c), a))
 }
+
+func (h *Handler) DeleteArticle(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	a, err := h.articleStore.GetUserArticleBySlug(userIDFromToken(c), slug)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if a == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+
+	if err := h.articleStore.DeleteArticle(a); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	return c.Status(http.StatusOK).JSON(map[string]interface{}{"result": "ok"})
+}
+
+func (h *Handler) UndoDeleteArticle(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	if err := h.articleStore.UndoDeleteArticle(slug); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	a, err := h.articleStore.GetUserArticleBySlug(userIDFromToken(c), slug)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(utils.NewError(err))
+	}
+	if a == nil {
+		return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+	}
+	return c.Status(http.StatusOK).JSON(newArticleResponse(userIDFromToken(c), a))
+}

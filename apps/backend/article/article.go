@@ -10,4 +10,6 @@ type Store interface {
 	GetUserArticleBySlug(userID uuid.UUID, slug string) (*model.Article, error)
 	CreateArticle(*model.Article) error
 	UpdateArticle(*model.Article) error
+	DeleteArticle(*model.Article) error
+	UndoDeleteArticle(slug string) error
 }

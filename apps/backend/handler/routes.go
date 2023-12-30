@@ -30,4 +30,6 @@ func (h *Handler) Register(r *fiber.App) {
 	articles.Post("", h.CreateArticle)
 	articles.Put("/:slug", h.UpdateArticle)
 	articles.Get("/:slug", h.GetArticle)
+	articles.Delete("/:slug", h.DeleteArticle)
+	articles.Patch("/:slug", h.UndoDeleteArticle)
 }
