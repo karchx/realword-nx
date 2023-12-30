@@ -54,6 +54,7 @@ type articleResponse struct {
 	Body        string    `json:"body" validate:"required"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
+	TagList     []string  `json:"tagList"`
 	Author      struct {
 		Username  string  `json:"username"`
 		Bio       *string `json:"bio"`
@@ -78,6 +79,9 @@ func newArticleResponse(userID uuid.UUID, a *model.Article) *singleArticleRespon
 	ar.Author.Image = a.Author.Image
 	ar.Author.Bio = a.Author.Bio
 	ar.Author.Following = a.Author.FollowedBy(userID)
+	for _, t := range a.Tags {
+		ar.TagList = append(ar.TagList, t.Tag)
+	}
 
 	return &singleArticleResponse{ar}
 }

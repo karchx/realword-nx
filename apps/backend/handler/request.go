@@ -101,9 +101,10 @@ func (r *userLoginRequest) bind(c *fiber.Ctx, v *Validator) error {
 
 type articleCreateRequest struct {
 	Article struct {
-		Title       string `json:"title" validate:"required"`
-		Description string `json:"description" validate:"required"`
-		Body        string `json:"body" validate:"required"`
+		Title       string   `json:"title" validate:"required"`
+		Description string   `json:"description" validate:"required"`
+		Body        string   `json:"body" validate:"required"`
+		Tags        []string `json:"tagList,omitempty"`
 	} `json:"article"`
 }
 
@@ -118,6 +119,11 @@ func (r *articleCreateRequest) bind(c *fiber.Ctx, a *model.Article, v *Validator
 	a.Slug = slug.Make(r.Article.Title)
 	a.Description = r.Article.Description
 	a.Body = r.Article.Body
+	if r.Article.Tags != nil {
+		for _, t := range r.Article.Tags {
+			a.Tags = append(a.Tags, model.Tag{Tag: t})
+		}
+	}
 	return nil
 }
 
