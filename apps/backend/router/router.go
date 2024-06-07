@@ -1,14 +1,17 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gothew/hogger"
 )
 
 func New() *fiber.App {
 	f := fiber.New()
-	f.Use(logger.New())
+	f.Use(adaptor.HTTPMiddleware(logMiddleware))
 	f.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
@@ -16,4 +19,11 @@ func New() *fiber.App {
 	}))
 
 	return f
+}
+
+func logMiddleware(next http.Handler) http.Handler {
+	return hogger.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		next.ServeHTTP(w, r)
+	},
+	))
 }
